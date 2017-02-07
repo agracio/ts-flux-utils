@@ -1,6 +1,7 @@
 node_modules/
 src/**/*.js
 src/**/*.map
-./lib/
+lib/
 publish/
 .idea/workspace.xml
+!src/lib
