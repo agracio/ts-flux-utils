@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "commonjs",
+        "lib": [
+            "es6",
+            "dom"
+        ],
+        "outDir": "./lib",
+        "sourceMap": true,
+        "declaration": false,
+        "noEmitOnError": false,
+        "removeComments": false
+    },
+    "include": [
+        "./src/*.ts",
+        "./test/*.ts",
+        "./typings/index.d.ts"
+    ],
+    "exclude": [
+        "node_modules"
+    ],
+    "compileOnSave": false,
+    "buildOnSave": false
+}
