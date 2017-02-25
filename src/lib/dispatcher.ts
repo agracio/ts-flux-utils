@@ -28,7 +28,7 @@ export class Dispatcher<TPayload> extends flux.Dispatcher<TPayload> {
         }else {
             super.dispatch(payload);
             if (this._queue.length > 1) {
-                let nextItem: TPayload = this._queue.shift();
+                let nextItem: TPayload = this._queue.shift(); 
                 super.dispatch(nextItem);
             }
         }
