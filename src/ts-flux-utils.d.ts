@@ -4,7 +4,7 @@ interface DispatcherOptions{
 }
 
 interface Payload{
-    action: Action
+    action: Action,
 }
 
 interface Action{
@@ -99,5 +99,6 @@ declare module 'ts-flux-utils'{
         areEqual(one: T, two: T): boolean;
 
         protected createEvent(actionType: symbol | string): Event;
+        protected updateState(actionType: symbol | string)
     }
 }

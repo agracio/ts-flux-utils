@@ -1,40 +1,72 @@
 import {Dispatcher} from "./dispatcher";
-import {ReduceStore} from "flux/utils";
 import {Event} from './event';
 import * as EventEmitter from 'events'
 
-export class MultiActionStore<T> extends ReduceStore<T, Payload>{
+interface EventDictionary{
+    [event: string]: EventDefinition
+}
+
+export interface EventDefinition{
+    event: Event,
+    updateState: boolean,
+    stateKey?: string
+}
+
+export class MultiActionStore<T>{
 
     private _name: string = this.constructor['name'];
     private _eventEmitter: EventEmitter = new EventEmitter();
-    private _events: {[event: string]: Event} = {};
+    private _events: EventDictionary = <EventDictionary>{};
+    private _state: T = <T>{};
 
     public get name(): string{
         return this._name;
     }
 
-    getInitialState(): T{
-        return <T>{};
+    getState(): T{
+        return this._state;
     }
 
     constructor(private _dispatcher: Dispatcher<Payload>){
-        super(_dispatcher);
+        _dispatcher.register((payload) => {
+            this.reduce(payload);
+        });
     }
 
-    reduce(state: T, payload: Payload){
-        let name: string | symbol = this.getEventName(payload.action.type);
-        let event = this._events[name];
-        if(event) event.emit(payload.action.data);
-        return state;
+    reduce(payload: Payload){
+        let eventDefinition = this.getEvent(payload.action.type);
+
+        this.updateState(payload);
+
+        if(eventDefinition) {
+            eventDefinition.event.emit(payload.action.data);
+        }
     }
 
-    protected createEvent(actionType: symbol | string): Event{
+    protected updateState(payload: Payload) {
+        let eventDefinition = this.getEvent(payload.action.type);
+        if(eventDefinition){
+            if(eventDefinition.updateState){
+                if(eventDefinition.stateKey){
+                    this._state[eventDefinition.stateKey] = payload.action.data;
+                }else{
+                    this._state = payload.action.data;
+                }
+            }
+        }
+    }
+
+    protected createEvent(actionType: symbol | string, updateState: boolean = false, stateKey?: string): EventSubscription{
         let name: string | symbol = this.getEventName(actionType);
 
         if(!this._events[name]){
-            this._events[name] = new Event(this._eventEmitter, name);
+            this._events[name] = {
+                event: new Event(this._eventEmitter, name),
+                updateState: updateState,
+                stateKey: stateKey
+            };
         }
-        return this._events[name];
+        return this._events[name].event;
     }
 
     private getEventName = (actionType: symbol | string): string | symbol =>{
@@ -43,5 +75,10 @@ export class MultiActionStore<T> extends ReduceStore<T, Payload>{
         }else{
             return `${this._name}-${actionType}`
         }
+    };
+
+    private getEvent = (actionType: symbol | string) =>{
+        let name: string | symbol = this.getEventName(actionType);
+        return this._events[name];
     };
 }

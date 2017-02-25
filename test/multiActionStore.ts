@@ -24,6 +24,24 @@ class StatelessStore<T> extends MultiActionStore<T>{
     }
 }
 
+class SimpleStateStore<T> extends MultiActionStore<T>{
+
+    public get onStringEvent(): EventSubscription{
+        return this.createEvent(ActionType.StringActionType, true);
+    }
+}
+
+class StatefulStore<T> extends MultiActionStore<T>{
+
+    public get onStringEvent(): EventSubscription{
+        return this.createEvent(ActionType.StringActionType, true, 'key1');
+    }
+
+    public get onSymbolEvent(): EventSubscription{
+        return this.createEvent(ActionType.SymbolActionType, true, 'key2');
+    }
+}
+
 describe('MultiActionStore', () => {
     it('create', function() {
         let store: MultiActionStore<any> = new MultiActionStore(dispatcher);
@@ -53,7 +71,7 @@ describe('MultiActionStore', () => {
         setTimeout(() =>{
             expect(dataArray).to.eql(['test1', 'test2']);
             done();
-        }, 500);
+        }, 200);
     }
 
     it('add listener | string', (done) =>{
@@ -74,5 +92,39 @@ describe('MultiActionStore', () => {
     it('remove listener | symbol', (done) =>{
         let store: StatelessStore<any> = new StatelessStore(dispatcher);
         return removeListener(store.onSymbolEvent, ActionType.SymbolActionType, done);
+    });
+
+    it('simple state', (done) =>{
+        let store: SimpleStateStore<any> = new SimpleStateStore(dispatcher);
+        let listener = (data) =>{
+            expect(data).to.equal('test');
+            expect(store.getState()).to.equal('test');
+            done();
+        };
+        store.onStringEvent.addListener(listener);
+        dispatcher.dispatch({action: {type: ActionType.StringActionType, data: 'test'}});
+        store.onStringEvent.removeListener(listener);
+        store = null;
+    });
+
+    it('object state', (done) =>{
+        let store: StatefulStore<any> = new StatefulStore(dispatcher);
+        let listener1 = (data) =>{
+            expect(data).to.eql('test1');
+            expect(store.getState()).to.eql({key1: 'test1'});
+
+        };
+        let listener2 = (data) =>{
+            expect(data).to.eql('test2');
+            expect(store.getState()).to.eql({key1: 'test1', key2: 'test2'});
+            done();
+        };
+        store.onStringEvent.addListener(listener1);
+        store.onSymbolEvent.addListener(listener2);
+        dispatcher.dispatch({action: {type: ActionType.StringActionType, data: 'test1'}});
+        dispatcher.dispatch({action: {type: ActionType.SymbolActionType, data: 'test2'}});
+        store.onStringEvent.removeListener(listener1);
+        store.onSymbolEvent.removeListener(listener2);
+        store = null;
     });
 });
