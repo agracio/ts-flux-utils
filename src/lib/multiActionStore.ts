@@ -22,14 +22,14 @@ export class MultiActionStore<T> extends ReduceStore<T, Payload>{
     }
 
     reduce(state: T, payload: Payload){
-        let name: string = this.getEventName(payload.action.type);
+        let name: string | symbol = this.getEventName(payload.action.type);
         let event = this._events[name];
         if(event) event.emit(payload.action.data);
         return state;
     }
 
     protected createEvent(actionType: symbol | string): Event{
-        let name: string = this.getEventName(actionType);
+        let name: string | symbol = this.getEventName(actionType);
 
         if(!this._events[name]){
             this._events[name] = new Event(this._eventEmitter, name);
@@ -37,9 +37,9 @@ export class MultiActionStore<T> extends ReduceStore<T, Payload>{
         return this._events[name];
     }
 
-    private getEventName = (actionType: symbol | string): string =>{
+    private getEventName = (actionType: symbol | string): string | symbol =>{
         if(typeof actionType === 'symbol'){
-            return `${this._name}-${actionType.toString().replace('Symbol(', '').replace(')', '')}`;
+            return actionType;
         }else{
             return `${this._name}-${actionType}`
         }

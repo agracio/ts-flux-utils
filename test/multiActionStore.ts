@@ -8,14 +8,19 @@ let expect = chai.expect;
 
 const dispatcher = new Dispatcher<Payload>();
 
+const ActionType: any = {
+    StringActionType: 'StringActionType',
+    SymbolActionType: Symbol('SymbolActionType')
+};
+
 class StatelessStore<T> extends MultiActionStore<T>{
 
-    public get onTestEvent(): EventSubscription{
-        return this.createEvent('TestActionType');
+    public get onStringEvent(): EventSubscription{
+        return this.createEvent(ActionType.StringActionType);
     }
 
-    public get onAnotherTestEvent(): EventSubscription{
-        return this.createEvent('AnotherTestActionType');
+    public get onSymbolEvent(): EventSubscription{
+        return this.createEvent(ActionType.SymbolActionType);
     }
 }
 
@@ -25,21 +30,49 @@ describe('MultiActionStore', () => {
         expect(store).to.exist;
     });
 
-    it('add listener', (done) =>{
-        let store: StatelessStore<any> = new StatelessStore(dispatcher);
-        store.onTestEvent.addListener((data) => {
+    function addListener(event: EventSubscription, actionType: string | symbol, done){
+        let listener = (data) =>{
             expect(data).to.equal('test');
             done();
-        });
-        dispatcher.dispatch({action: {type: 'TestActionType', data: 'test'}})
+        };
+        event.addListener(listener);
+        dispatcher.dispatch({action: {type: actionType, data: 'test'}});
+        event.removeListener(listener);
+    }
+
+    function removeListener(event: EventSubscription, actionType: string | symbol, done){
+        let dataArray: any[] = [];
+        let listener = (data) =>{
+            dataArray.push(data)
+        };
+        event.addListener(listener);
+        dispatcher.dispatch({action: {type: actionType, data: 'test1'}});
+        dispatcher.dispatch({action: {type: actionType, data: 'test2'}});
+        event.removeListener(listener);
+        dispatcher.dispatch({action: {type: actionType, data: 'test3'}});
+        setTimeout(() =>{
+            expect(dataArray).to.eql(['test1', 'test2']);
+            done();
+        }, 500);
+    }
+
+    it('add listener | string', (done) =>{
+        let store: StatelessStore<any> = new StatelessStore(dispatcher);
+        return addListener(store.onStringEvent, ActionType.StringActionType, done)
     });
 
-    it('remove listener', (done) =>{
+    it('add listener | symbol', (done) =>{
         let store: StatelessStore<any> = new StatelessStore(dispatcher);
-        store.onTestEvent.addListener((data) => {
-            expect(data).to.equal('test');
-            done();
-        });
-        dispatcher.dispatch({action: {type: 'TestActionType', data: 'test'}})
+        return addListener(store.onSymbolEvent, ActionType.SymbolActionType, done)
+    });
+
+    it('remove listener | string', (done) =>{
+        let store: StatelessStore<any> = new StatelessStore(dispatcher);
+        return removeListener(store.onStringEvent, ActionType.StringActionType, done);
+    });
+
+    it('remove listener | symbol', (done) =>{
+        let store: StatelessStore<any> = new StatelessStore(dispatcher);
+        return removeListener(store.onSymbolEvent, ActionType.SymbolActionType, done);
     });
 });
