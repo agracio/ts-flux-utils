@@ -9,7 +9,7 @@ interface Payload{
 
 interface Action{
     type: string | symbol;
-    data: any
+    data?: any
 }
 
 interface EventSubscription{

@@ -1,7 +1,7 @@
 import {Dispatcher} from "./dispatcher";
 import {ReduceStore} from "flux/utils";
 import {Event} from './event';
-import EventEmitter = NodeJS.EventEmitter;
+import * as EventEmitter from 'events'
 
 export class MultiActionStore<T> extends ReduceStore<T, Payload>{
 

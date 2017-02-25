@@ -1,5 +1,5 @@
 
-import EventEmitter = NodeJS.EventEmitter;
+import * as EventEmitter from 'events'
 
 export class Event implements EventSubscription{
 
