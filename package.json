@@ -1,10 +1,12 @@
 {
   "name": "ts-flux-utils",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "",
   "main": "src/index.ts",
   "scripts": {
-    "build": "gulp build"
+    "build": "gulp build",
+    "test": "gulp --nolazy --debug-brk=5858 test",
+    "debug": "node --nolazy --debug-brk=5858 myProgram.js"
   },
   "repository": {
     "type": "git",

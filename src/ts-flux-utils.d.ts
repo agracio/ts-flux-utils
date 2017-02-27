@@ -71,8 +71,11 @@ declare module 'ts-flux-utils'{
         emit(data: any): boolean;
     }
 
-    export class MultiActionStore<T> extends ReduceStore<T, Payload>{
+    export class MultiActionStore<T>{
         constructor(dispatcher: Dispatcher<Payload>);
+
+        name: string;
+
         /**
          * Getter that exposes the entire state of this store.
          * If your state is not immutable you should override this and not expose state directly.
@@ -80,17 +83,11 @@ declare module 'ts-flux-utils'{
         getState(): T;
 
         /**
-         * Constructs the initial state for this store.
-         * This is called once during construction of the store.
-         */
-        getInitialState(): T;
-
-        /**
          * Reduces the current state, and an action to the new state of this store.
          * All subclasses must implement this method.
          * This method should be pure and have no side-effects.
          */
-        reduce(state: T, action: Payload): T;
+        reduce(action: Payload);
 
         /**
          * Checks if two versions of state are the same.
@@ -98,7 +95,7 @@ declare module 'ts-flux-utils'{
          */
         areEqual(one: T, two: T): boolean;
 
-        protected createEvent(actionType: symbol | string): Event;
-        protected updateState(actionType: symbol | string)
+        protected createEvent(actionType: symbol | string, updateState?: boolean, stateKey?: string): EventSubscription;
+        protected updateState(payload: Payload);
     }
 }

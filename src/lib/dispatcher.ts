@@ -20,7 +20,7 @@ export class Dispatcher<TPayload> extends flux.Dispatcher<TPayload> {
             let length = this._queue.length;
             if (this._maxQueueLength > 0 && length > this._maxQueueLength){
                 this._queue = [];
-                throw `Dispatcher queue ${length} exceeds allowed ${this._maxQueueLength}`;
+                throw `Dispatcher queue ${length} exceeds ${this._maxQueueLength}`;
             }
             if (this._warnQueueLength > 0 && length > this._warnQueueLength) {
                 console.warn(`Dispatcher queue ${length} exceeds ${this._warnQueueLength}`);
