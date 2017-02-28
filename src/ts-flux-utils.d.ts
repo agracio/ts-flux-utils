@@ -78,7 +78,6 @@ declare module 'ts-flux-utils'{
 
         /**
          * Getter that exposes the entire state of this store.
-         * If your state is not immutable you should override this and not expose state directly.
          */
         getState(): T;
 
@@ -87,15 +86,31 @@ declare module 'ts-flux-utils'{
          * All subclasses must implement this method.
          * This method should be pure and have no side-effects.
          */
-        reduce(action: Payload);
+        protected reduce(action: Payload);
 
         /**
          * Checks if two versions of state are the same.
          * You do not need to override this if your state is immutable.
          */
-        areEqual(one: T, two: T): boolean;
+        //protected areEqual(one: T, two: T): boolean;
 
         protected createEvent(actionType: symbol | string, updateState?: boolean, stateKey?: string): EventSubscription;
         protected updateState(payload: Payload);
+    }
+
+    export class DispatcherAction implements Action{
+
+        constructor(_type: string | symbol, _data?: any);
+
+        type: string | symbol;
+
+        data: any;
+    }
+
+    export class ActionPayload implements Payload{
+
+        constructor(_action: Action);
+
+        action: Action;
     }
 }

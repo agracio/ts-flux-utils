@@ -107,7 +107,7 @@ describe('MultiActionStore', () => {
         store = null;
     });
 
-    it('object state', (done) =>{
+    it('keyed state', (done) =>{
         let store: StatefulStore<any> = new StatefulStore(dispatcher);
         let listener1 = (data) =>{
             expect(data).to.eql('test1');

@@ -14,7 +14,7 @@ export interface EventDefinition{
 
 export class MultiActionStore<T>{
 
-    private _name: string = this.constructor['name'];
+    private _name: string = this.constructor.name;
     private _eventEmitter: EventEmitter = new EventEmitter();
     private _events: EventDictionary = <EventDictionary>{};
     private _state: T = <T>{};
@@ -28,12 +28,13 @@ export class MultiActionStore<T>{
     }
 
     constructor(private _dispatcher: Dispatcher<Payload>){
+        this._eventEmitter.setMaxListeners(0);
         _dispatcher.register((payload) => {
             this.reduce(payload);
         });
     }
 
-    reduce(payload: Payload){
+    protected reduce(payload: Payload){
         let eventDefinition = this.getEvent(payload.action.type);
 
         this.updateState(payload);
