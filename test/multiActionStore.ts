@@ -50,12 +50,13 @@ describe('MultiActionStore', () => {
 
     function addListener(event: EventSubscription, actionType: string | symbol, done){
         let listener = (data) =>{
+            event.removeListener(listener);
             expect(data).to.equal('test');
             done();
         };
         event.addListener(listener);
         dispatcher.dispatch({action: {type: actionType, data: 'test'}});
-        event.removeListener(listener);
+
     }
 
     function removeListener(event: EventSubscription, actionType: string | symbol, done){
@@ -97,17 +98,18 @@ describe('MultiActionStore', () => {
     it('simple state', (done) =>{
         let store: SimpleStateStore<any> = new SimpleStateStore(dispatcher);
         let listener = (data) =>{
+            store.onStringEvent.removeListener(listener);
             expect(data).to.equal('test');
             expect(store.getState()).to.equal('test');
             done();
         };
         store.onStringEvent.addListener(listener);
         dispatcher.dispatch({action: {type: ActionType.StringActionType, data: 'test'}});
-        store.onStringEvent.removeListener(listener);
         store = null;
     });
 
     it('keyed state', (done) =>{
+        let date = new Date();
         let store: StatefulStore<any> = new StatefulStore(dispatcher);
         let listener1 = (data) =>{
             expect(data).to.eql('test1');
@@ -115,14 +117,14 @@ describe('MultiActionStore', () => {
 
         };
         let listener2 = (data) =>{
-            expect(data).to.eql('test2');
-            expect(store.getState()).to.eql({key1: 'test1', key2: 'test2'});
+            expect(data).to.eql(date);
+            expect(store.getState()).to.eql({key1: 'test1', key2: date});
             done();
         };
         store.onStringEvent.addListener(listener1);
         store.onSymbolEvent.addListener(listener2);
         dispatcher.dispatch({action: {type: ActionType.StringActionType, data: 'test1'}});
-        dispatcher.dispatch({action: {type: ActionType.SymbolActionType, data: 'test2'}});
+        dispatcher.dispatch({action: {type: ActionType.SymbolActionType, data: date}});
         store.onStringEvent.removeListener(listener1);
         store.onSymbolEvent.removeListener(listener2);
         store = null;

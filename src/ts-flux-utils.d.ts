@@ -107,7 +107,7 @@ declare module 'ts-flux-utils'{
         data: any;
     }
 
-    export class ActionPayload implements Payload{
+    export class DispatcherPayload implements Payload{
 
         constructor(_action: Action);
 

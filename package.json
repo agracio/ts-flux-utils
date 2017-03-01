@@ -1,6 +1,6 @@
 {
   "name": "ts-flux-utils",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "",
   "main": "src/index.ts",
   "scripts": {
@@ -23,6 +23,7 @@
   "homepage": "https://github.com/agracio/ts-flux-utils#readme",
   "dependencies": {
     "flux": "^3.1.2",
+    "immutable": "^3.8.1",
     "react": "^15.4.2"
   },
   "devDependencies": {

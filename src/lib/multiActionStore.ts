@@ -1,12 +1,13 @@
 import {Dispatcher} from "./dispatcher";
 import {Event} from './event';
 import * as EventEmitter from 'events'
+import * as Immutable from 'immutable';
 
 interface EventDictionary{
     [event: string]: EventDefinition
 }
 
-export interface EventDefinition{
+interface EventDefinition{
     event: Event,
     updateState: boolean,
     stateKey?: string
@@ -23,7 +24,17 @@ export class MultiActionStore<T>{
         return this._name;
     }
 
+    protected get state(): T{
+        return this._state;
+    }
+
     getState(): T{
+        // console.log(this._state);
+        // let record = Immutable.Record(this._state);
+        //Immutable.fromJS(this._state)
+        // console.log(myHash.toObject())
+        // console.log(new record());
+        //return JSON.parse(JSON.stringify(this._state));
         return this._state;
     }
 
