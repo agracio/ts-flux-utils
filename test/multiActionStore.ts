@@ -9,36 +9,36 @@ let expect = chai.expect;
 const dispatcher = new Dispatcher<Payload>();
 
 const ActionType: any = {
-    StringActionType: 'StringActionType',
-    SymbolActionType: Symbol('SymbolActionType')
+    Action1: 'Action1',
+    Action2: 'Action2'
 };
 
 class StatelessStore<T> extends MultiActionStore<T>{
 
     public get onStringEvent(): EventSubscription{
-        return this.createEvent(ActionType.StringActionType);
+        return this.createEvent(ActionType.Action1);
     }
 
     public get onSymbolEvent(): EventSubscription{
-        return this.createEvent(ActionType.SymbolActionType);
+        return this.createEvent(ActionType.Action2);
     }
 }
 
 class SimpleStateStore<T> extends MultiActionStore<T>{
 
     public get onStringEvent(): EventSubscription{
-        return this.createEvent(ActionType.StringActionType, true);
+        return this.createEvent(ActionType.Action1, true);
     }
 }
 
 class StatefulStore<T> extends MultiActionStore<T>{
 
     public get onStringEvent(): EventSubscription{
-        return this.createEvent(ActionType.StringActionType, true, 'key1');
+        return this.createEvent(ActionType.Action1, true, 'key1');
     }
 
     public get onSymbolEvent(): EventSubscription{
-        return this.createEvent(ActionType.SymbolActionType, true, 'key2');
+        return this.createEvent(ActionType.Action2, true, 'key2');
     }
 }
 
@@ -77,22 +77,22 @@ describe('MultiActionStore', () => {
 
     it('add listener | string', (done) =>{
         let store: StatelessStore<any> = new StatelessStore(dispatcher);
-        return addListener(store.onStringEvent, ActionType.StringActionType, done)
+        return addListener(store.onStringEvent, ActionType.Action1, done)
     });
 
     it('add listener | symbol', (done) =>{
         let store: StatelessStore<any> = new StatelessStore(dispatcher);
-        return addListener(store.onSymbolEvent, ActionType.SymbolActionType, done)
+        return addListener(store.onSymbolEvent, ActionType.Action2, done)
     });
 
     it('remove listener | string', (done) =>{
         let store: StatelessStore<any> = new StatelessStore(dispatcher);
-        return removeListener(store.onStringEvent, ActionType.StringActionType, done);
+        return removeListener(store.onStringEvent, ActionType.Action1, done);
     });
 
     it('remove listener | symbol', (done) =>{
         let store: StatelessStore<any> = new StatelessStore(dispatcher);
-        return removeListener(store.onSymbolEvent, ActionType.SymbolActionType, done);
+        return removeListener(store.onSymbolEvent, ActionType.Action2, done);
     });
 
     it('simple state', (done) =>{
@@ -104,7 +104,7 @@ describe('MultiActionStore', () => {
             done();
         };
         store.onStringEvent.addListener(listener);
-        dispatcher.dispatch({action: {type: ActionType.StringActionType, data: 'test'}});
+        dispatcher.dispatch({action: {type: ActionType.Action1, data: 'test'}});
         store = null;
     });
 
@@ -123,8 +123,8 @@ describe('MultiActionStore', () => {
         };
         store.onStringEvent.addListener(listener1);
         store.onSymbolEvent.addListener(listener2);
-        dispatcher.dispatch({action: {type: ActionType.StringActionType, data: 'test1'}});
-        dispatcher.dispatch({action: {type: ActionType.SymbolActionType, data: date}});
+        dispatcher.dispatch({action: {type: ActionType.Action1, data: 'test1'}});
+        dispatcher.dispatch({action: {type: ActionType.Action2, data: date}});
         store.onStringEvent.removeListener(listener1);
         store.onSymbolEvent.removeListener(listener2);
         store = null;

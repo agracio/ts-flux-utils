@@ -15,7 +15,7 @@ interface EventDefinition{
 
 export class MultiActionStore<T>{
 
-    private _name: string = this.constructor.name;
+    private _name: string = this.constructor['name'];
     private _eventEmitter: EventEmitter = new EventEmitter();
     private _events: EventDictionary = <EventDictionary>{};
     private _state: T = <T>{};
