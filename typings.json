@@ -3,7 +3,7 @@
     "chai": "registry:npm/chai#3.5.0+20160723033700",
     "fbemitter": "registry:dt/fbemitter#2.0.0+20160726204056",
     "flux": "registry:dt/flux#3.0.0+20170123203653",
-    "react": "registry:dt/react#15.0.0+20170207010524"
+    "react": "registry:npm/react#15.0.1+20170104200836"
   },
   "globalDependencies": {
     "mocha": "registry:dt/mocha#2.2.5+20170204022515",
