@@ -15,6 +15,10 @@ export class Dispatcher<TPayload> extends flux.Dispatcher<TPayload> {
         }
     }
 
+    public get queueSize(): number{
+        return this._queue.length;
+    }
+
     public dispatch(payload: TPayload): void {
 
         if (this.isDispatching()) {

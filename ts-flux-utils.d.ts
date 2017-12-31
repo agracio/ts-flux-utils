@@ -37,6 +37,12 @@ declare module 'ts-flux-utils'{
         constructor(options?: DispatcherOptions);
 
         /**
+         * Get current queue size of items queued for dispatching
+         */
+
+        queueSize: number;
+
+        /**
          * Registers a callback that will be invoked with every payload sent to the dispatcher.
          * Returns a string token to identify the callback to be used with waitFor() or unregister.
          */
