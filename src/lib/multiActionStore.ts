@@ -1,6 +1,7 @@
 import {Dispatcher} from "./dispatcher";
 import {Event} from './event';
 import * as EventEmitter from 'events'
+import {Utils} from "./utils";
 
 interface EventDefinition{
     event: Event,
@@ -23,9 +24,13 @@ export class MultiActionStore<T>{
         return this._state;
     }
 
-    getState(): Readonly<T>{
+    getState(stateKey?: string): Readonly<T>{
+        if(stateKey){
+            return Utils.getObjectByKey(this._state, stateKey);
+        }
         return this._state;
     }
+
 
     constructor(private _dispatcher: Dispatcher<Payload>){
         this._eventEmitter.setMaxListeners(0);

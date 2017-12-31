@@ -114,17 +114,22 @@ describe('MultiActionStore', () => {
         let listener1 = (data) =>{
             expect(data).to.eql('test1');
             expect(store.getState()).to.eql({key1: 'test1'});
+            expect(store.getState('key1')).to.eql('test1');
+            expect(store.getState()['key1']).to.eql('test1');
 
         };
         let listener2 = (data) =>{
-            expect(data).to.eql(date);
-            expect(store.getState()).to.eql({key1: 'test1', key2: date});
+            expect(data).to.eql({date:date});
+            expect(store.getState()).to.eql({key1: 'test1', 'key2': {date:date}});
+            expect(store.getState('key1')).to.eql('test1');
+            expect(store.getState('key2.date')).to.eql(date);
             done();
         };
+
         store.onStringEvent.addListener(listener1);
         store.onSymbolEvent.addListener(listener2);
         dispatcher.dispatch({action: {type: ActionType.Action1, data: 'test1'}});
-        dispatcher.dispatch({action: {type: ActionType.Action2, data: date}});
+        dispatcher.dispatch({action: {type: ActionType.Action2, data: {date:date}}});
         store.onStringEvent.removeListener(listener1);
         store.onSymbolEvent.removeListener(listener2);
         store = null;

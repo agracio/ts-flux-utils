@@ -76,10 +76,14 @@ declare module 'ts-flux-utils'{
 
         name: string;
 
+        state: Readonly<T>;
+
+
         /**
-         * Getter that exposes the entire state of this store.
+         * Getter that exposes the state of this store or a specific key in state.
+         * Supports deep object key lookup using `key1.key2.key3` dotted notation.
          */
-        getState(): T;
+        getState(stateKey?: string): Readonly<T>
 
         /**
          * Reduces the current state, and an action to the new state of this store.
