@@ -1,8 +1,8 @@
 
 import * as chai from 'chai';
 
-import {MultiActionStore} from "../src/index";
-import {Dispatcher} from "../src/index";
+import {Dispatcher} from "../lib/dispatcher";
+import {MultiActionStore} from "../lib/multiActionStore";
 
 let expect = chai.expect;
 

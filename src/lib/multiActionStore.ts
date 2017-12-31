@@ -1,7 +1,6 @@
 import {Dispatcher} from "./dispatcher";
 import {Event} from './event';
 import * as EventEmitter from 'events'
-import * as Immutable from 'immutable';
 
 interface EventDictionary{
     [event: string]: EventDefinition

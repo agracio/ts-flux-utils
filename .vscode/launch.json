@@ -1,0 +1,20 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "test",
+            "type": "node",
+            "request": "launch",
+            "stopOnEntry": true,
+            "cwd": "${workspaceRoot}",
+            "runtimeExecutable": "npm",
+            "windows": {
+                "runtimeExecutable": "npm.cmd"
+            },
+            "runtimeArgs": ["test"],
+            "port": 5858,
+            "sourceMaps": true,
+            "outDir": null
+        }
+    ]
+}

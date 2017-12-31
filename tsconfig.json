@@ -2,19 +2,23 @@
     "compilerOptions": {
         "target": "es5",
         "module": "commonjs",
-        "outDir": "./lib",
-        "sourceMap": true,
-        "declaration": false,
-        "noEmitOnError": false,
-        "removeComments": false
+        "noImplicitAny": false,
+        "removeComments": false,
+        "preserveConstEnums": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": false,
+        "baseUrl": "./src",
+        "outDir": "./dist",
+        "sourceMap": true
     },
     "include": [
         "./src/*.ts",
-        "./test/*.ts",
-        "./typings/index.d.ts"
+        "./src/test/*.ts",
+        "./typings/index.d.ts",
+        "./ts-flux-utils.d.ts"
     ],
     "exclude": [
-        "node_modules"
+        "node_modules/**/*.ts"
     ],
     "compileOnSave": false,
     "buildOnSave": false

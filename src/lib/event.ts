@@ -7,11 +7,11 @@ export class Event implements EventSubscription{
 
     }
 
-    public addListener(listener: Function){
+    public addListener(listener: (...args: any[]) => void | Function){
         return this._emitter.addListener(this._event, listener);
     }
 
-    public removeListener(listener: Function){
+    public removeListener(listener: (...args: any[]) => void | Function){
         return this._emitter.removeListener(this._event, listener);
     }
 

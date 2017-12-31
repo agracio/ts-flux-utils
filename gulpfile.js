@@ -4,7 +4,6 @@ var mocha = require('gulp-mocha');
 var tsb = require('gulp-tsb');
 var chalk = require('chalk');
 var run = require('gulp-run');
-var jeditor = require("gulp-json-editor");
 var bump = require('gulp-bump');
 var sequence = require('run-sequence');
 
@@ -12,8 +11,8 @@ var buildDone = false;
 
 var paths = {
     src: ['src/**', 'test/**', './*.ts', 'typings/*.d.ts'],
-    out: './lib',
-    test: './lib/test/**/*.js',
+    out: './dist',
+    test: './dist/test/**/*.js',
     publish: './publish'
 };
 
@@ -50,9 +49,9 @@ gulp.task('test', ['build'], function() {
     }
 });
 
-gulp.task('package_clean', function() {
-    var clean = [paths.publish + '/**/*'];
-    console.log(chalk.blue('Cleaning ' + clean));
+gulp.task('build_clean', function() {
+    var clean = [paths.out + '/**/*'];
+    console.log(chalk.blue('Cleaning build path' + clean));
     return del(clean);
 });
 
@@ -64,22 +63,12 @@ gulp.task('ci', ['test'], function() {
     return gulp.watch(paths.src, ['test']);
 });
 
-gulp.task('package_definition', function() {
-    return gulp.src("./package.json")
-        .pipe(jeditor(function(json) {
-            json.devDependencies = "";
-            json.main = 'index.js';
-            return json;
-        }))
-        .pipe(gulp.dest(paths.publish));
-});
-
 gulp.task('package_copy', function() {
-    return gulp.src([paths.out + '/src/**/*.js', './README.md', './src/ts-flux-utils.d.ts']).pipe(gulp.dest(paths.publish));
+    return gulp.src([paths.out + '/lib/**/*.js', './README.md', './ts-flux-utils.d.ts']).pipe(gulp.dest(paths.publish));
 });
 
 gulp.task('package_npm', function() {
-    run('npm publish ' + paths.publish).exec();
+    run('npm publish').exec();
 });
 
 gulp.task('package_bump', function() {
@@ -89,14 +78,14 @@ gulp.task('package_bump', function() {
 });
 
 gulp.task('package_pack', function() {
-    run('npm pack ' + paths.publish).exec();
+    run('npm pack').exec();
 });
 
 gulp.task('pack', function() {
-    sequence('build', 'package_clean', 'package_copy', 'package_definition', 'package_pack');
+    sequence('build_clean','build', 'package_pack');
 });
 
 gulp.task('publish', function() {
-    sequence('build', 'package_clean', 'package_copy', 'package_definition', 'package_npm', 'package_bump');
+    sequence('build_clean','build', 'package_npm', 'package_bump');
 });
 
