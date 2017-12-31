@@ -1,6 +1,6 @@
 {
   "name": "ts-flux-utils",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -21,17 +21,16 @@
   "homepage": "https://github.com/agracio/ts-flux-utils#readme",
   "dependencies": {
     "@types/flux": "^3.1.4",
-    "@types/node": "^8.5.2",
     "flux": "^3.1.3"
   },
   "devDependencies": {
     "@types/chai": "^4.0.10",
     "@types/mocha": "^2.2.45",
+    "@types/node": "^8.5.2",
     "chai": "^4.1.2",
     "chalk": "^2.3.0",
     "del": "^3.0.0",
     "gulp": "^3.9.1",
-    "gulp-bump": "^3.0.0",
     "gulp-mocha": "^5.0.0",
     "gulp-run": "^1.7.1",
     "gulp-tsb": "^2.0.5",

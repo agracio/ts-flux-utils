@@ -2,10 +2,6 @@ import {Dispatcher} from "./dispatcher";
 import {Event} from './event';
 import * as EventEmitter from 'events'
 
-interface EventDictionary{
-    [event: string]: EventDefinition
-}
-
 interface EventDefinition{
     event: Event,
     updateState: boolean,
@@ -16,24 +12,18 @@ export class MultiActionStore<T>{
 
     private _name: string = this.constructor['name'];
     private _eventEmitter: EventEmitter = new EventEmitter();
-    private _events: EventDictionary = <EventDictionary>{};
+    private _events: Map<string | symbol, EventDefinition> = new Map<string, EventDefinition>();
     private _state: T = <T>{};
 
     public get name(): string{
         return this._name;
     }
 
-    protected get state(): T{
+    protected get state(): Readonly<T>{
         return this._state;
     }
 
-    getState(): T{
-        // console.log(this._state);
-        // let record = Immutable.Record(this._state);
-        //Immutable.fromJS(this._state)
-        // console.log(myHash.toObject())
-        // console.log(new record());
-        //return JSON.parse(JSON.stringify(this._state));
+    getState(): Readonly<T>{
         return this._state;
     }
 
@@ -70,14 +60,14 @@ export class MultiActionStore<T>{
     protected createEvent(actionType: symbol | string, updateState: boolean = false, stateKey?: string): EventSubscription{
         let name: string | symbol = this.getEventName(actionType);
 
-        if(!this._events[name]){
-            this._events[name] = {
+        if(!this._events.has(name)){
+            this._events.set(name, {
                 event: new Event(this._eventEmitter, name),
                 updateState: updateState,
                 stateKey: stateKey
-            };
+            });
         }
-        return this._events[name].event;
+        return this._events.get(name).event;
     }
 
     private getEventName = (actionType: symbol | string): string | symbol =>{
@@ -90,6 +80,6 @@ export class MultiActionStore<T>{
 
     private getEvent = (actionType: symbol | string) =>{
         let name: string | symbol = this.getEventName(actionType);
-        return this._events[name];
+        return this._events.get(name);
     };
 }

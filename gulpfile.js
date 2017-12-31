@@ -4,7 +4,6 @@ var mocha = require('gulp-mocha');
 var tsb = require('gulp-tsb');
 var chalk = require('chalk');
 var run = require('gulp-run');
-var bump = require('gulp-bump');
 var sequence = require('run-sequence');
 
 var buildDone = false;
@@ -12,8 +11,7 @@ var buildDone = false;
 var paths = {
     src: ['src/**', 'test/**', './*.ts', 'typings/*.d.ts'],
     out: './dist',
-    test: './dist/test/**/*.js',
-    publish: './publish'
+    test: './dist/test/**/*.js'
 };
 
 function handleBuildError (error) {
@@ -63,22 +61,12 @@ gulp.task('ci', ['test'], function() {
     return gulp.watch(paths.src, ['test']);
 });
 
-gulp.task('package_copy', function() {
-    return gulp.src([paths.out + '/lib/**/*.js', './README.md', './ts-flux-utils.d.ts']).pipe(gulp.dest(paths.publish));
-});
-
 gulp.task('package_npm', function() {
-    run('npm publish').exec();
-});
-
-gulp.task('package_bump', function() {
-    return gulp.src('./package.json')
-        .pipe(bump())
-        .pipe(gulp.dest('./'));
+    return run('npm publish').exec();
 });
 
 gulp.task('package_pack', function() {
-    run('npm pack').exec();
+    return run('npm pack').exec();
 });
 
 gulp.task('pack', function() {
@@ -86,6 +74,6 @@ gulp.task('pack', function() {
 });
 
 gulp.task('publish', function() {
-    sequence('build_clean','build', 'package_npm', 'package_bump');
+    sequence('build_clean','build', 'package_npm');
 });
 
